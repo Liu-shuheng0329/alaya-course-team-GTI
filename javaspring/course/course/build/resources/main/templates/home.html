@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>首页</title>
+</head>
+<body>
+    <h1>欢迎</h1>
+
+    <div sec:authorize="hasAuthority('STUDENT')">
+        <a th:href="@{/student/courses}">浏览课程</a><br>
+        <a th:href="@{/student/schedule}">我的课表</a>
+    </div>
+
+    <div sec:authorize="hasAuthority('TEACHER')">
+        <a th:href="@{/teacher/courses}">我的课程</a><br>
+        <a th:href="@{/teacher/create-course}">创建课程</a>
+    </div>
+
+    <div sec:authorize="hasAuthority('ADMIN')">
+        <a th:href="@{/admin/users}">用户管理</a>
+    </div>
+
+    <form method="post" th:action="@{/logout}">
+        <button type="submit">注销</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/coursedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true # 开启H2网页控制台
+  jpa:
+    hibernate:
+      ddl-auto: update
