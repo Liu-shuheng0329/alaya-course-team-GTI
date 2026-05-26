@@ -15,14 +15,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.disable())
-            )
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/register", "/login", "/css/**", "/h2-console/**").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/student/**").hasAuthority("STUDENT")
+                .requestMatchers("/teacher/**").hasAuthority("TEACHER")
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()          // 注意前面的点
             )
-            .formLogin(form -> form.disable());
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/home", true)
+                .permitAll()
+            )
+            .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
+            .csrf(csrf -> csrf.disable());            // 临时禁用 CSRF，让 H2 控制台可以 POST 登录
         return http.build();
     }
 
